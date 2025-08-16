@@ -1,15 +1,22 @@
 FROM node:20-alpine
 
+# Робоча папка
 WORKDIR /usr/src/app
 
-COPY package.json ./
+# Копіюємо package.json та package-lock.json
+COPY package*.json ./
 
+# Встановлюємо залежності
 RUN npm install
 
+# Копіюємо весь проєкт
 COPY . .
 
-RUN touch ./beerNightState.json
+# Створюємо валідний порожній JSON для стану
+RUN echo "{}" > ./beerNightState.json
 
-EXPOSE 3000
+# Експортуємо порт
+EXPOSE 2999
 
+# Стартова команда
 CMD ["npm", "run", "dev"]

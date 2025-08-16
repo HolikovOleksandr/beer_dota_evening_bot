@@ -1,12 +1,13 @@
-import { InlineKeyboard } from "grammy";
+import { Keyboard } from "grammy";
 
-const beerNightKeyboard = new InlineKeyboard()
-  .text("Само собою 🕹️", "yes")
+const beerNightKeyboard = new Keyboard()
+  .text("🍻 Так")
   .row()
-  .text("Не сьогодні ❌", "no")
+  .text("😿 Тільки на суху")
   .row()
-  .text("Так, але на суху 😢", "dry")
+  .text("🤔 Може бути")
   .row()
-  .text("Можливо 🤔", "maybe");
+  .text("🚫 Нажаль")
+  .resized();
 
 export default beerNightKeyboard;

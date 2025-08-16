@@ -7,6 +7,7 @@ export class ExpressServer {
   private port: number;
   private bot: BeerDotaBot;
 
+  // Тепер бот передаємо готовий через фабрику
   constructor(bot: BeerDotaBot, port: number) {
     this.app = express();
     this.port = port;
@@ -15,12 +16,14 @@ export class ExpressServer {
 
   public async start(webhookUrl: string, webhookPath: string) {
     this.app.use(express.json());
+
+    // Підключаємо Telegram webhook
     this.app.use(webhookPath, webhookCallback(this.bot.bot, "express"));
 
     // Health-check
     this.app.get("/", (_req, res) => res.send("OK"));
 
-    // Реєструємо webhook в Telegram
+    // Встановлюємо webhook у Telegram
     await this.bot.bot.api.setWebhook(`${webhookUrl}${webhookPath}`);
 
     this.app.listen(this.port, () => {
