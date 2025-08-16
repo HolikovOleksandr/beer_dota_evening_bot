@@ -1,4 +1,4 @@
-name: Build and Push Docker
+name: Build and Deploy Docker (Long Polling)
 
 on:
   push:
@@ -6,11 +6,11 @@ on:
       - master
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Log in to Docker Hub
@@ -27,7 +27,7 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/beerbot:latest
 
-      - name: Deploy to server
+      - name: Deploy to server via SSH
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -40,5 +40,4 @@ jobs:
             docker run -d \
               --name beerbot \
               -e BOT_TOKEN=${{ secrets.BOT_TOKEN }} \
-              -p 3000:2999 \
               ${{ secrets.DOCKER_HUB_USERNAME }}/beerbot:latest
