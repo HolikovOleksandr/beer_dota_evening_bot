@@ -4,6 +4,7 @@ import {
   beerNightHandler,
   beerNightChoiceHandler,
   statusHandler,
+  setupErrorHandler,
 } from "./handlers/beer_night.handler.js";
 
 export class BeerDotaBot {
@@ -11,6 +12,9 @@ export class BeerDotaBot {
 
   private constructor(token: string) {
     this.bot = new Bot(token);
+
+    // ===================== ГЛОБАЛЬНИЙ ОБРОБНИК ПОМИЛОК =====================
+    setupErrorHandler(this.bot);
   }
 
   // Фабричний метод для асинхронної ініціалізації

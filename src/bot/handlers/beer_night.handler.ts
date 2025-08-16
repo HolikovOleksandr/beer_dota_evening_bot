@@ -25,7 +25,7 @@ try {
 // ===================== ХЕЛПЕР =====================
 function formatBeerNightMessage(state: BeerNightState) {
   let message = "<b>💪 Стан пиводотного вечора:</b>\n\n";
-  for (const [id, data] of Object.entries(state.users)) {
+  for (const [id, data] of Object.entries(state.users || {})) {
     const name = data.username ? `@${data.username}` : id;
     message += `• ${name}: ${data.choice}\n`;
   }
@@ -63,6 +63,9 @@ export async function beerNightChoiceHandler(ctx: Context) {
   const choiceText = ctx.message?.text;
   if (!choiceText) return;
 
+  // безпечна ініціалізація
+  if (!beerNightState.users) beerNightState.users = {};
+
   beerNightState.users[userId] = { username, choice: choiceText };
   fs.writeFileSync(STATE_FILE, JSON.stringify(beerNightState, null, 2));
 
@@ -79,4 +82,9 @@ export async function statusHandler(ctx: Context) {
 
   const message = formatBeerNightMessage(beerNightState);
   await sendOrReplaceMessage(ctx, message);
+}
+
+// ===================== ГЛОБАЛЬНИЙ ОБРОБНИК ПОМИЛОК =====================
+export function setupErrorHandler(bot: any) {
+  bot.catch = (err: any) => console.error("❌ BotError", err);
 }
